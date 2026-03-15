@@ -3,9 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#8B4513">
-    <link rel="manifest" href="manifest.json">
-    <title>五道方游戏</title>
+    <title>狼吃小羊游戏</title>
     <style>
         * {
             margin: 0;
@@ -122,29 +120,65 @@
             position: relative;
             width: 500px;
             height: 500px;
-            background-color: #E8D5B7;
-            border: 15px solid #8B4513;
-            border-radius: 0;
-            padding: 0;
+            background-color: #8B4513;
+            border: 15px solid #654321;
+            border-radius: 10px;
+            padding: 10px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        #board::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(rgba(255, 255, 255, 0.1), rgba(0, 0, 0, 0.1));
+            pointer-events: none;
         }
 
         /* 棋盘线条 */
         .board-line {
             position: absolute;
-            background-color: #8B4513;
+            background-color: #654321;
             z-index: 1;
-            height: 2px;
-            width: 340px;
         }
 
         .board-line.horizontal {
             height: 2px;
+            left: 10px;
+            right: 10px;
         }
 
         .board-line.vertical {
             width: 2px;
-            height: 340px;
+            top: 10px;
+            bottom: 10px;
+        }
+
+        /* 坐标 */
+        .coordinate {
+            position: absolute;
+            font-size: 12px;
+            font-weight: bold;
+            color: rgba(255, 255, 255, 0.9);
+            background-color: rgba(101, 67, 33, 0.8);
+            padding: 2px 5px;
+            border-radius: 3px;
+            z-index: 3;
+        }
+
+        .coordinate.horizontal {
+            bottom: 5px;
+            text-align: center;
+            width: 20px;
+        }
+
+        .coordinate.vertical {
+            left: 5px;
+            text-align: center;
+            width: 20px;
         }
 
         /* 交叉点 */
@@ -153,26 +187,25 @@
             width: 30px;
             height: 30px;
             border-radius: 50%;
-            background-color: #FFFFFF;
+            background-color: rgba(255, 255, 255, 0.8);
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             transition: all 0.3s ease;
             z-index: 2;
-            border: 2px solid #8B4513;
         }
 
         .intersection:hover {
             transform: scale(1.1);
-            background-color: #F0F0F0;
+            background-color: rgba(255, 255, 255, 0.9);
         }
 
         /* 交叉点数字 */
         .intersection-number {
             font-size: 12px;
             font-weight: bold;
-            color: #8B4513;
+            color: #333;
             z-index: 3;
         }
 
@@ -198,16 +231,16 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
         }
 
-        .piece.black {
-            background-color: #000;
-            color: #fff;
-            border: 2px solid #333;
+        .piece.wolf {
+            background-color: #FFB677;
+            color: #8B4513;
+            border: 2px solid #8B4513;
         }
 
-        .piece.red {
-            background-color: #f00;
+        .piece.sheep {
+            background-color: #FF6B6B;
             color: #fff;
-            border: 2px solid #333;
+            border: 2px solid #8B4513;
         }
 
         /* 可移动位置高亮 */
@@ -326,82 +359,26 @@
         }
 
         .message-content p {
-                    margin-bottom: 30px;
-                font-size: 16px;
-                color: #666;
-            }
+            margin-bottom: 30px;
+            font-size: 16px;
+            color: #666;
+        }
 
-            #message-btn {
-                    padding: 10px 20px;
-                background-color: #8B4513;
-                color: white;
-                border: none;
-                border-radius: 4px;
-                cursor: pointer;
-                font-size: 16px;
-                font-weight: bold;
-                transition: background-color 0.3s ease;
-            }
+        #message-btn {
+            padding: 10px 20px;
+            background-color: #8B4513;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
 
-            #message-btn:hover {
-                background-color: #654321;
-            }
-
-            /* 游戏规则弹窗样式 */
-            .modal {
-                display: none;
-                position: fixed;
-                z-index: 1000;
-                left: 0;
-                top: 0;
-                width: 100%;
-                height: 100%;
-                overflow: auto;
-                background-color: rgba(0,0,0,0.4);
-            }
-
-            .modal-content {
-                background-color: #fefefe;
-                margin: 15% auto;
-                padding: 20px;
-                border: 1px solid #888;
-                width: 80%;
-                max-width: 600px;
-                border-radius: 10px;
-                box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-            }
-
-            .close {
-                color: #aaa;
-                float: right;
-                font-size: 28px;
-                font-weight: bold;
-                cursor: pointer;
-            }
-
-            .close:hover,
-            .close:focus {
-                color: black;
-                text-decoration: none;
-                cursor: pointer;
-            }
-
-            .modal-content h2 {
-                color: #8B4513;
-                margin-bottom: 20px;
-                text-align: center;
-            }
-
-            .modal-content ul {
-                list-style-position: inside;
-                color: #333;
-            }
-
-            .modal-content li {
-                margin-bottom: 10px;
-                font-size: 14px;
-                line-height: 1.4;
-            }
+        #message-btn:hover {
+            background-color: #654321;
+        }
 
         @media (max-width: 768px) {
             .game-container {
@@ -500,11 +477,11 @@
 </head>
 <body>
     <div class="game-container">
-        <h1>五道方游戏</h1>
+        <h1>狼吃小羊</h1>
         
         <div class="game-info">
             <div class="player-info">
-                <div id="current-player">当前玩家: 黑</div>
+                <div id="current-player">当前玩家: 狼</div>
                 <div id="game-status">游戏状态: 准备开始</div>
             </div>
             <div class="game-controls">
@@ -512,39 +489,6 @@
                 <button id="stop-btn">停止游戏</button>
                 <button id="reset-btn">重新开始</button>
                 <button id="surrender-btn">认输</button>
-                <button id="rules-btn">游戏规则</button>
-            </div>
-        </div>
-        
-        <!-- 游戏规则弹窗 -->
-        <div id="rules-modal" class="modal">
-            <div class="modal-content">
-                <span class="close">&times;</span>
-                <h2>五道方游戏规则</h2>
-                <ul>
-                    <li>黑，红双方可以协商或者猜大小，决定谁先手</li>
-                    <li>黑方先手，点击棋盘上任意位置，先点击任意点位高亮再点击一下为确定棋子下到此位置</li>
-                    <li>红方接着下棋，操作方式相同</li>
-                    <li>黑，红任意一方，在3，7，11这3个位置上3个棋子成一条直线，可以再下1个棋子</li>
-                    <li>黑，红任意一方，在3，9，15这3个位置上3个棋子成一直线时，可以再下1个棋子</li>
-                    <li>黑，红任意一方，在15，19，23这3个位置上3个棋子成一直线时，可以再下1个棋子</li>
-                    <li>黑，红任意一方，在11，17，23这3个位置上3个棋子成一直线时，可以再下1个棋子</li>
-                    <li>黑，红任意一方，只要4个棋子围成一个正四方形的情况下就可以再下1个棋子</li>
-                    <li>黑，红任意一方，只要5个棋子在2，7，12，17，22上成一条直线，可以再下2个棋子</li>
-                    <li>黑，红任意一方，只要5个棋子在3，8，13，18，23上成一条直线，可以再下2个棋子</li>
-                    <li>黑，红任意一方，在22，18，14，10这4个位置上4个棋子成一直线，可以再下2个棋子</li>
-                    <li>黑，红任意一方，在2，8，14，20这4个位置上4个棋子成一直线时，可以再下2个棋子</li>
-                    <li>黑，红任意一方，5个棋子在最外边的4条线上成了一条直线，可以再下1个棋子</li>
-                    <li>黑，红任意一方，在4，8，12，16这4个位置上4个棋子成一直线的情况下，可以再下2个棋子</li>
-                    <li>黑，红任意一方，在6，12，18，24这4个位置上4个棋子成一直线，可以再下2个棋子</li>
-                    <li>黑，红任意一方，在1，7，13，19，25这5个位置5个棋子形成了一条直线，可以再下3个棋子</li>
-                    <li>黑，红任意一方，在5，9，13，17，21这5个位置上5个棋子形成了一条直线，可以再下3个棋子</li>
-                    <li>25个棋位如果棋子下满啦，然后才可以进入吃子阶段</li>
-                    <li>假如是黑方先手的话，红方可以第一个随便吃掉黑方的1个棋子，没有附加条件；然后是黑方吃掉红方的1个棋子，没有附加条件</li>
-                    <li>接下来就是黑，红双方组合正方形或者是直线，不论是直线，还是斜线只要成一直线时，就可以吃掉对方的棋子，吃1个棋子和多下1个棋子的条件一样，吃2个棋子和多下2个棋子的条件一样</li>
-                    <li>移动棋子时，每次只能走一子，走子的操作是先点击要移动的棋子，所选棋子最近的空位高亮就是可移动的棋子落子位置，然后点击要落子的位置，这样棋子就移动到新的空位，移动的目的就是触发吃子的条件，比如4子围成一个正方形吃1子，比如3子形成一条直线吃1子，4子形成一条直线吃1子，比如5</li>
-                    <li>根据上述规则，任意一方把对方的棋子先吃完为胜</li>
-                </ul>
             </div>
         </div>
         
@@ -555,44 +499,55 @@
         </div>
         
         <div class="piece-info">
-            <div class="piece black">
-                <div class="piece-icon">●</div>
-                <div class="piece-name">黑</div>
-                <div class="piece-count">剩余: <span id="black-count">12</span></div>
+            <div class="piece wolf">
+                <div class="piece-icon">🐺</div>
+                <div class="piece-name">狼</div>
+                <div class="piece-count">剩余: <span id="wolf-count">3</span></div>
             </div>
-            <div class="piece red">
-                <div class="piece-icon">●</div>
-                <div class="piece-name">红</div>
-                <div class="piece-count">剩余: <span id="red-count">12</span></div>
+            <div class="piece sheep">
+                <div class="piece-icon">🐑</div>
+                <div class="piece-name">羊</div>
+                <div class="piece-count">剩余: <span id="sheep-count">15</span></div>
             </div>
+        </div>
+        
+        <div class="game-rules">
+            <h3>游戏规则</h3>
+            <ul>
+                <li>狼和羊在一条直线上，只有狼和羊的中间有一个空位狼才可以吃掉羊</li>
+                <li>狼吃掉羊后，狼要在羊所在的位置，如果不吃羊则只能走一格</li>
+                <li>狼在游戏框架内可以上下左右的直线都可以吃羊</li>
+                <li>羊每次只能走一格，不能跳过狼或者羊</li>
+                <li>狼数量为3，羊数量为15</li>
+                <li>狼先手，然后交替走棋</li>
+                <li>狼把羊吃光为狼胜</li>
+                <li>狼被围死无法移动为羊胜</li>
+            </ul>
         </div>
     </div>
     
     <div id="message-box" class="message-box">
         <div class="message-content">
             <h2 id="message-title">游戏开始</h2>
-            <p id="message-text">黑先手，请开始游戏！</p>
+            <p id="message-text">狼先手，请开始游戏！</p>
             <button id="message-btn">确定</button>
         </div>
     </div>
     
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
     <script>
-        class FiveRoadSquareGame {
+        class WolfEatSheepGame {
             constructor() {
                 this.board = Array(26).fill(null); // 1-25为棋盘位置
-                this.currentPlayer = 'black';
+                this.currentPlayer = 'wolf';
                 this.gameStatus = 'ready';
                 this.selectedPiece = null;
-                this.blackCount = 12;
-                this.redCount = 12;
-                this.totalPieces = 0;
-                this.extraMoves = 0;
-                this.gamePhase = 'placing'; // placing 或 eating
-                this.eatPhaseStep = 0; // 0: 红方吃黑方, 1: 黑方吃红方, 2: 开始移动棋子
-                this.eatSelectionPhase = false;
-                this.eatCount = 0;
-                this.eatTargetPlayer = null;
-                this.eatenPieces = 0;
+                this.wolfCount = 3;
+                this.sheepCount = 15;
+                this.socket = null;
+                this.roomId = null;
+                this.playerRole = null;
+                this.isOnline = false;
                 
                 // 棋盘交叉点坐标映射（5x5网格）
                 this.positionMap = {
@@ -627,8 +582,8 @@
                 this.boardElement = document.getElementById('board');
                 this.currentPlayerElement = document.getElementById('current-player');
                 this.gameStatusElement = document.getElementById('game-status');
-                this.blackCountElement = document.getElementById('black-count');
-                this.redCountElement = document.getElementById('red-count');
+                this.wolfCountElement = document.getElementById('wolf-count');
+                this.sheepCountElement = document.getElementById('sheep-count');
                 this.startBtn = document.getElementById('start-btn');
                 this.stopBtn = document.getElementById('stop-btn');
                 this.resetBtn = document.getElementById('reset-btn');
@@ -645,6 +600,7 @@
                 this.createBoard();
                 this.bindEvents();
                 this.resetGame();
+                this.showOnlinePrompt();
             }
             
             createBoard() {
@@ -675,24 +631,18 @@
             
             createBoardLines() {
                 // 创建水平线
-                const horizontalPositions = [80, 160, 240, 320, 400]; // 交叉点的y坐标
-                for (const y of horizontalPositions) {
+                for (let y = 0; y <= 4; y++) {
                     const line = document.createElement('div');
                     line.classList.add('board-line', 'horizontal');
-                    line.style.top = `${y}px`;
-                    line.style.left = '80px';
-                    line.style.width = '340px';
+                    line.style.top = `${y * 80 + 80}px`;
                     this.boardElement.appendChild(line);
                 }
                 
                 // 创建垂直线
-                const verticalPositions = [80, 160, 240, 320, 400]; // 交叉点的x坐标
-                for (const x of verticalPositions) {
+                for (let x = 0; x <= 4; x++) {
                     const line = document.createElement('div');
                     line.classList.add('board-line', 'vertical');
-                    line.style.left = `${x}px`;
-                    line.style.top = '80px';
-                    line.style.height = '340px';
+                    line.style.left = `${x * 80 + 80}px`;
                     this.boardElement.appendChild(line);
                 }
             }
@@ -703,501 +653,308 @@
                 this.resetBtn.addEventListener('click', () => this.resetGame());
                 this.surrenderBtn.addEventListener('click', () => this.surrender());
                 this.messageBtn.addEventListener('click', () => this.hideMessage());
+            }
+            
+            showOnlinePrompt() {
+                const promptBox = document.createElement('div');
+                promptBox.innerHTML = `
+                    <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 2000;">
+                        <div style="background-color: white; padding: 30px; border-radius: 10px; text-align: center; max-width: 400px;">
+                            <h2 style="color: #8B4513; margin-bottom: 20px;">联网对战</h2>
+                            <p style="margin-bottom: 20px;">请选择游戏模式：</p>
+                            <button id="create-room-btn" style="padding: 10px 20px; margin: 5px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer;">创建房间</button>
+                            <button id="join-room-btn" style="padding: 10px 20px; margin: 5px; background-color: #2196F3; color: white; border: none; border-radius: 4px; cursor: pointer;">加入房间</button>
+                            <button id="local-game-btn" style="padding: 10px 20px; margin: 5px; background-color: #ff9800; color: white; border: none; border-radius: 4px; cursor: pointer;">本地游戏</button>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(promptBox);
                 
-                // 游戏规则按钮事件
-                const rulesBtn = document.getElementById('rules-btn');
-                const rulesModal = document.getElementById('rules-modal');
-                const closeBtn = document.querySelector('.close');
+                document.getElementById('create-room-btn').addEventListener('click', () => {
+                    promptBox.remove();
+                    this.createRoom();
+                });
                 
-                if (rulesBtn && rulesModal && closeBtn) {
-                    rulesBtn.addEventListener('click', () => {
-                        rulesModal.style.display = 'block';
-                    });
-                    
-                    closeBtn.addEventListener('click', () => {
-                        rulesModal.style.display = 'none';
-                    });
-                    
-                    // 点击弹窗外部关闭
-                    window.addEventListener('click', (event) => {
-                        if (event.target === rulesModal) {
-                            rulesModal.style.display = 'none';
-                        }
-                    });
+                document.getElementById('join-room-btn').addEventListener('click', () => {
+                    const roomId = prompt('请输入房间ID：');
+                    if (roomId) {
+                        promptBox.remove();
+                        this.joinRoom(roomId);
+                    }
+                });
+                
+                document.getElementById('local-game-btn').addEventListener('click', () => {
+                    promptBox.remove();
+                    this.isOnline = false;
+                    this.showMessage('游戏开始', '本地游戏模式，狼先手，请开始游戏！');
+                });
+            }
+            
+            createRoom() {
+                this.socket = io('http://localhost:3000');
+                this.isOnline = true;
+                
+                this.socket.on('connect', () => {
+                    console.log('连接成功');
+                    this.socket.emit('createRoom');
+                });
+                
+                this.socket.on('roomCreated', (data) => {
+                    this.roomId = data.roomId;
+                    this.playerRole = data.role;
+                    this.showMessage('房间创建成功', `房间ID：${this.roomId}\n您的角色：${this.playerRole === 'wolf' ? '狼' : '羊'}\n等待其他玩家加入...`);
+                    this.updateGameInfo();
+                });
+                
+                this.socket.on('gameState', (gameState) => {
+                    this.updateGameState(gameState);
+                });
+                
+                this.socket.on('moveResult', (result) => {
+                    if (!result.success) {
+                        this.showMessage('移动失败', result.message);
+                    }
+                });
+                
+                this.socket.on('error', (error) => {
+                    this.showMessage('错误', error.message);
+                });
+            }
+            
+            joinRoom(roomId) {
+                this.socket = io('http://localhost:3000');
+                this.isOnline = true;
+                
+                this.socket.on('connect', () => {
+                    console.log('连接成功');
+                    this.socket.emit('joinRoom', roomId);
+                });
+                
+                this.socket.on('roomJoined', (data) => {
+                    this.roomId = data.roomId;
+                    this.playerRole = data.role;
+                    this.showMessage('加入成功', `您的角色：${this.playerRole === 'wolf' ? '狼' : '羊'}\n游戏开始！`);
+                    this.updateGameInfo();
+                });
+                
+                this.socket.on('gameState', (gameState) => {
+                    this.updateGameState(gameState);
+                });
+                
+                this.socket.on('moveResult', (result) => {
+                    if (!result.success) {
+                        this.showMessage('移动失败', result.message);
+                    }
+                });
+                
+                this.socket.on('error', (error) => {
+                    this.showMessage('错误', error.message);
+                });
+            }
+            
+            updateGameState(gameState) {
+                this.board = gameState.board;
+                this.currentPlayer = gameState.currentPlayer;
+                this.gameStatus = gameState.gameStatus;
+                this.wolfCount = gameState.wolfCount;
+                this.sheepCount = gameState.sheepCount;
+                
+                this.renderBoard();
+                this.updateGameInfo();
+                
+                if (gameState.winner) {
+                    this.showMessage('游戏结束', `${gameState.winner === 'wolf' ? '狼' : '羊'}胜利！`);
                 }
             }
             
             startGame() {
+                if (this.isOnline) {
+                    // 联网模式下由服务器控制游戏开始
+                    return;
+                }
+                
                 this.gameStatus = 'playing';
                 this.updateGameInfo();
-                this.showMessage('游戏开始', '黑先手，请开始游戏！');
+                this.showMessage('游戏开始', '狼先手，请开始游戏！');
             }
             
             stopGame() {
+                if (this.isOnline) {
+                    this.showMessage('提示', '联网模式下无法暂停游戏');
+                    return;
+                }
+                
                 this.gameStatus = 'paused';
                 this.updateGameInfo();
                 this.showMessage('游戏暂停', '游戏已暂停，点击开始游戏继续。');
             }
             
             resetGame() {
+                if (this.isOnline && this.socket) {
+                    this.socket.emit('resetGame', this.roomId);
+                    return;
+                }
+                
                 this.gameStatus = 'ready';
-                this.currentPlayer = 'black';
+                this.currentPlayer = 'wolf';
                 this.selectedPiece = null;
-                this.blackCount = 12;
-                this.redCount = 12;
-                this.totalPieces = 0;
-                this.extraMoves = 0;
-                this.gamePhase = 'placing';
-                this.eatPhaseStep = 0;
-                this.eatSelectionPhase = false;
-                this.eatCount = 0;
-                this.eatTargetPlayer = null;
-                this.eatenPieces = 0;
+                this.wolfCount = 3;
+                this.sheepCount = 15;
                 
                 // 初始化棋盘
                 this.board = Array(26).fill(null);
                 
+                // 放置狼的初始位置（第一行中间三个位置：2, 3, 4）
+                this.board[2] = 'wolf';
+                this.board[3] = 'wolf';
+                this.board[4] = 'wolf';
+                
+                // 放置羊的初始位置（第三、四、五行：11-25）
+                for (let i = 11; i <= 25; i++) {
+                    this.board[i] = 'sheep';
+                }
+                
                 this.renderBoard();
                 this.updateGameInfo();
-                this.showMessage('游戏重置', '棋盘已重置，黑先手，请开始游戏！');
+                this.showMessage('游戏重置', '棋盘已重置，狼先手，请开始游戏！');
             }
             
             surrender() {
-                const winner = this.currentPlayer === 'black' ? '红' : '黑';
+                if (this.isOnline) {
+                    this.showMessage('提示', '联网模式下请等待对手');
+                    return;
+                }
+                
+                const winner = this.currentPlayer === 'wolf' ? '羊' : '狼';
                 this.gameStatus = 'ended';
                 this.updateGameInfo();
-                this.showMessage('游戏结束', `${this.currentPlayer === 'black' ? '黑' : '红'}认输，${winner}胜利！`);
+                this.showMessage('游戏结束', `${this.currentPlayer === 'wolf' ? '狼' : '羊'}认输，${winner}胜利！`);
             }
             
             handleIntersectionClick(position) {
                 if (this.gameStatus !== 'playing') return;
                 
+                if (this.isOnline) {
+                    // 联网模式下，只有当前玩家是自己的角色时才能操作
+                    if (this.currentPlayer !== this.playerRole) {
+                        this.showMessage('提示', '等待对方玩家行动');
+                        return;
+                    }
+                }
+                
                 const piece = this.board[position];
                 
-                if (this.gamePhase === 'placing') {
-                    // 下棋阶段
-                    if (this.selectedPiece === null) {
-                        // 第一次点击，高亮显示位置
-                        if (piece === null) {
-                            this.selectedPiece = position;
-                            this.highlightValidMoves(position);
-                        }
-                    } else if (this.selectedPiece === position) {
-                        // 第二次点击同一位置，确认放置棋子
-                        this.board[position] = this.currentPlayer;
-                        this.totalPieces++;
-                        
-                        // 检查是否需要增加额外移动
-                        const extraMoves = this.calculateExtraMoves(position);
-                        if (extraMoves > 0) {
-                            this.extraMoves += extraMoves;
-                            this.showMessage('额外下子', `恭喜！你可以再下 ${extraMoves} 个子！`);
-                        }
-                        
-                        this.playMoveSound();
-                        this.renderBoard();
-                        this.updateGameInfo();
-                        
-                        // 检查棋盘是否下满
-                        if (this.totalPieces === 25) {
-                            this.gamePhase = 'eating';
-                            this.showMessage('吃子阶段', '棋盘已下满，红方先吃黑方1子！');
-                            // 设置吃子阶段的初始状态
-                            this.eatPhaseStep = 0; // 0: 红方吃黑方, 1: 黑方吃红方, 2: 开始移动棋子
-                            this.extraMoves = 0; // 清空额外移动机会
-                            this.selectedPiece = null;
-                            return;
-                        }
-                        
-                        // 检查是否有额外移动
-                        if (this.extraMoves > 0) {
-                            this.extraMoves--;
-                            this.selectedPiece = null;
-                            return;
-                        }
-                        
-                        this.checkGameEnd();
-                        this.switchPlayer();
-                        this.selectedPiece = null;
-                    } else {
-                        // 点击不同位置，重新选择
-                        if (piece === null) {
-                            this.selectedPiece = position;
-                            this.renderBoard();
-                            this.highlightValidMoves(position);
-                        }
+                if (this.selectedPiece === null) {
+                    // 选择棋子
+                    if (piece && piece === (this.isOnline ? this.playerRole : this.currentPlayer)) {
+                        this.selectedPiece = position;
+                        this.highlightValidMoves(position);
                     }
                 } else {
-                    // 吃子阶段
-                    if (this.eatPhaseStep === 0) {
-                        // 红方吃黑方1子
-                        if (piece === 'black') {
-                            this.board[position] = null;
-                            this.blackCount--;
-                            this.totalPieces--;
-                            this.eatPhaseStep = 1;
-                            this.showMessage('吃子阶段', '红方已吃黑方1子，黑方吃红方1子！');
-                            this.renderBoard();
-                            this.updateGameInfo();
-                        }
-                    } else if (this.eatPhaseStep === 1) {
-                        // 黑方吃红方1子
-                        if (piece === 'red') {
-                            this.board[position] = null;
-                            this.redCount--;
-                            this.totalPieces--;
-                            this.eatPhaseStep = 2;
-                            // 红方先手移动棋子
-                            this.currentPlayer = 'red';
-                            this.showMessage('吃子阶段', '黑方已吃红方1子，红方先手开始移动棋子！');
-                            this.renderBoard();
-                            this.updateGameInfo();
-                        }
-                    } else {
-                        // 移动棋子阶段
-                        if (this.selectedPiece === null) {
-                            // 第一次点击，选择要移动的棋子
-                            if (piece === this.currentPlayer) {
-                                this.selectedPiece = position;
-                                this.highlightValidMoves(position);
-                            }
-                        } else if (this.selectedPiece === position) {
-                            // 第二次点击同一位置，取消选择
-                            this.selectedPiece = null;
-                            this.renderBoard();
+                    // 移动棋子
+                    if (this.isValidMove(this.selectedPiece, position)) {
+                        if (this.isOnline) {
+                            // 联网模式下发送移动请求
+                            this.socket.emit('makeMove', {
+                                roomId: this.roomId,
+                                from: this.selectedPiece,
+                                to: position
+                            });
                         } else {
-                            // 点击不同位置，移动棋子（吃子）
-                            if (piece === null) {
-                                // 检查是否是相邻的空位
-                                if (this.isAdjacent(this.selectedPiece, position)) {
-                                    // 移动棋子到目标位置
-                                    this.board[position] = this.currentPlayer;
-                                    this.board[this.selectedPiece] = null;
-                                    
-                                    this.playMoveSound();
-                                    this.renderBoard();
-                                    this.updateGameInfo();
-                                    
-                                    // 计算吃子数量
-                                    const eatCount = this.calculateEatCount(position);
-                                    if (eatCount > 0) {
-                                        // 进入吃子选择阶段
-                                        this.eatSelectionPhase = true;
-                                        this.eatCount = eatCount;
-                                        this.eatTargetPlayer = this.currentPlayer === 'black' ? 'red' : 'black';
-                                        this.eatenPieces = 0;
-                                        this.showMessage('吃子选择', `你可以吃掉对方 ${eatCount} 个子，请选择要吃的棋子！`);
-                                        // 高亮显示所有可吃的对方棋子
-                                        this.highlightEatablePieces();
-                                    } else {
-                                        // 没有吃子机会，直接切换到对方
-                                        this.checkGameEnd();
-                                        this.switchPlayer();
-                                        this.selectedPiece = null;
-                                    }
-                                }
-                            } else if (this.eatSelectionPhase && piece === this.eatTargetPlayer) {
-                                // 吃子选择阶段，选择要吃的对方棋子
-                                this.board[position] = null;
-                                if (this.currentPlayer === 'black') {
-                                    this.redCount--;
-                                } else {
-                                    this.blackCount--;
-                                }
-                                this.totalPieces--;
-                                this.eatenPieces++;
-                                this.playMoveSound();
-                                this.renderBoard();
-                                this.updateGameInfo();
-                                
-                                if (this.eatenPieces >= this.eatCount) {
-                                    // 吃完了所有可吃的棋子，结束吃子选择阶段
-                                    this.eatSelectionPhase = false;
-                                    this.showMessage('吃子成功', `你吃掉了对方 ${this.eatCount} 个子！`);
-                                    this.checkGameEnd();
-                                    this.switchPlayer();
-                                    this.selectedPiece = null;
-                                } else {
-                                    // 还可以继续吃子
-                                    this.showMessage('吃子选择', `你还可以吃掉对方 ${this.eatCount - this.eatenPieces} 个子，请继续选择！`);
-                                    this.highlightEatablePieces();
-                                }
-                            }
+                            // 本地模式下直接移动
+                            this.makeMove(this.selectedPiece, position);
+                            this.checkGameEnd();
+                            this.switchPlayer();
                         }
                     }
+                    this.selectedPiece = null;
+                    this.renderBoard();
                 }
             }
             
-            isAdjacent(from, to) {
+            isValidMove(from, to) {
+                const piece = this.board[from];
+                
+                if (piece === 'wolf') {
+                    // 狼可以移动到空位或羊的位置（吃羊）
+                    return this.isValidWolfMove(from, to);
+                } else if (piece === 'sheep') {
+                    // 羊只能移动到空位
+                    if (this.board[to] !== null) return false;
+                    return this.isValidSheepMove(from, to);
+                }
+                
+                return false;
+            }
+            
+            isValidWolfMove(from, to) {
                 // 计算位置差
                 const fromRow = Math.ceil(from / 5);
                 const fromCol = (from - 1) % 5 + 1;
                 const toRow = Math.ceil(to / 5);
                 const toCol = (to - 1) % 5 + 1;
                 
-                // 检查是否是相邻的位置
-                const rowDiff = Math.abs(fromRow - toRow);
-                const colDiff = Math.abs(fromCol - toCol);
-                
-                return (rowDiff === 1 && colDiff === 0) || (rowDiff === 0 && colDiff === 1);
-            }
-            
-            calculateExtraMoves(position) {
-                let maxExtraMoves = 0;
-                
-                // 检查正方形（下1子）
-                if (this.hasSquareWithPosition(this.currentPlayer, position)) {
-                    maxExtraMoves = Math.max(maxExtraMoves, 1);
-                }
-                
-                // 检查所有可能的5子直线（下2子或3子）
-                const fivePieceLines = [
-                    // 对角线（下3子）
-                    [1, 7, 13, 19, 25],
-                    [5, 9, 13, 17, 21],
-                    // 垂直线（下2子）
-                    [2, 7, 12, 17, 22],
-                    [3, 8, 13, 18, 23],
-                    [4, 9, 14, 19, 24],
-                    // 水平线（下2子）
-                    [6, 7, 8, 9, 10],
-                    [11, 12, 13, 14, 15],
-                    [16, 17, 18, 19, 20]
-                ];
-                
-                for (const line of fivePieceLines) {
-                    if (this.hasLineWithPosition(this.currentPlayer, line, position)) {
-                        // 对角线下3子，其他5子直线下2子
-                        if (line.includes(1) && line.includes(25) || line.includes(5) && line.includes(21)) {
-                            maxExtraMoves = Math.max(maxExtraMoves, 3);
-                        } else {
-                            maxExtraMoves = Math.max(maxExtraMoves, 2);
-                        }
-                    }
-                }
-                
-                // 检查所有可能的4子直线（下2子）
-                const fourPieceLines = [
-                    [4, 8, 12, 16],
-                    [6, 12, 18, 24],
-                    [22, 18, 14, 10],
-                    [2, 8, 14, 20]
-                ];
-                
-                for (const line of fourPieceLines) {
-                    if (this.hasLineWithPosition(this.currentPlayer, line, position)) {
-                        maxExtraMoves = Math.max(maxExtraMoves, 2);
-                    }
-                }
-                
-                // 检查所有可能的3子直线（下1子）
-                const threePieceLines = [
-                    [3, 7, 11],
-                    [3, 9, 15],
-                    [15, 19, 23],
-                    [11, 17, 23]
-                ];
-                
-                for (const line of threePieceLines) {
-                    if (this.hasLineWithPosition(this.currentPlayer, line, position)) {
-                        maxExtraMoves = Math.max(maxExtraMoves, 1);
-                    }
-                }
-                
-                // 检查外边线（下1子）
-                const outerLines = [
-                    [1, 2, 3, 4, 5],
-                    [1, 6, 11, 16, 21],
-                    [21, 22, 23, 24, 25],
-                    [5, 10, 15, 20, 25]
-                ];
-                
-                for (const line of outerLines) {
-                    if (this.hasLineWithPosition(this.currentPlayer, line, position)) {
-                        maxExtraMoves = Math.max(maxExtraMoves, 1);
-                    }
-                }
-                
-                return maxExtraMoves;
-            }
-            
-            hasSquareWithPosition(player, position) {
-                // 检查包含指定位置的所有可能的正方形
-                const squares = [
-                    [1, 2, 6, 7],
-                    [2, 3, 7, 8],
-                    [3, 4, 8, 9],
-                    [4, 5, 9, 10],
-                    [6, 7, 11, 12],
-                    [7, 8, 12, 13],
-                    [8, 9, 13, 14],
-                    [9, 10, 14, 15],
-                    [11, 12, 16, 17],
-                    [12, 13, 17, 18],
-                    [13, 14, 18, 19],
-                    [14, 15, 19, 20],
-                    [16, 17, 21, 22],
-                    [17, 18, 22, 23],
-                    [18, 19, 23, 24],
-                    [19, 20, 24, 25]
-                ];
-                
-                // 只检查包含指定位置的正方形
-                const relevantSquares = squares.filter(square => square.includes(position));
-                
-                for (const square of relevantSquares) {
-                    let allMatch = true;
-                    for (const pos of square) {
-                        if (this.board[pos] !== player) {
-                            allMatch = false;
-                            break;
-                        }
-                    }
-                    if (allMatch) {
-                        return true;
-                    }
-                }
-                
-                return false;
-            }
-            
-            hasLineWithPosition(player, positions, targetPosition) {
-                // 只检查包含指定位置的直线
-                if (!positions.includes(targetPosition)) {
+                // 检查是否是直线移动
+                if (fromRow !== toRow && fromCol !== toCol) {
                     return false;
                 }
                 
-                for (const pos of positions) {
-                    if (this.board[pos] !== player) {
-                        return false;
-                    }
-                }
-                return true;
-            }
-            
-            calculateEatCount(position) {
-                let maxEatCount = 0;
+                // 计算距离
+                const distance = Math.max(Math.abs(fromRow - toRow), Math.abs(fromCol - toCol));
                 
-                // 检查正方形（吃1子）
-                if (this.hasSquareWithPosition(this.currentPlayer, position)) {
-                    maxEatCount = Math.max(maxEatCount, 1);
+                // 普通移动（距离为1，目标位置为空）
+                if (distance === 1 && this.board[to] === null) {
+                    return true;
                 }
                 
-                // 检查所有可能的5子直线（吃2子或3子）
-                const fivePieceLines = [
-                    // 对角线（吃3子）
-                    [1, 7, 13, 19, 25],
-                    [5, 9, 13, 17, 21],
-                    // 垂直线（吃2子）
-                    [2, 7, 12, 17, 22],
-                    [3, 8, 13, 18, 23],
-                    [4, 9, 14, 19, 24],
-                    // 水平线（吃2子）
-                    [6, 7, 8, 9, 10],
-                    [11, 12, 13, 14, 15],
-                    [16, 17, 18, 19, 20]
-                ];
-                
-                for (const line of fivePieceLines) {
-                    if (this.hasLineWithPosition(this.currentPlayer, line, position)) {
-                        // 对角线吃3子，其他5子直线吃2子
-                        if (line.includes(1) && line.includes(25) || line.includes(5) && line.includes(21)) {
-                            maxEatCount = Math.max(maxEatCount, 3);
-                        } else {
-                            maxEatCount = Math.max(maxEatCount, 2);
-                        }
-                    }
-                }
-                
-                // 检查所有可能的4子直线（吃2子）
-                const fourPieceLines = [
-                    [4, 8, 12, 16],
-                    [6, 12, 18, 24],
-                    [22, 18, 14, 10],
-                    [2, 8, 14, 20]
-                ];
-                
-                for (const line of fourPieceLines) {
-                    if (this.hasLineWithPosition(this.currentPlayer, line, position)) {
-                        maxEatCount = Math.max(maxEatCount, 2);
-                    }
-                }
-                
-                // 检查所有可能的3子直线（吃1子）
-                const threePieceLines = [
-                    [3, 7, 11],
-                    [3, 9, 15],
-                    [15, 19, 23],
-                    [11, 17, 23]
-                ];
-                
-                for (const line of threePieceLines) {
-                    if (this.hasLineWithPosition(this.currentPlayer, line, position)) {
-                        maxEatCount = Math.max(maxEatCount, 1);
-                    }
-                }
-                
-                // 检查外边线（吃1子）
-                const outerLines = [
-                    [1, 2, 3, 4, 5],
-                    [1, 6, 11, 16, 21],
-                    [21, 22, 23, 24, 25],
-                    [5, 10, 15, 20, 25]
-                ];
-                
-                for (const line of outerLines) {
-                    if (this.hasLineWithPosition(this.currentPlayer, line, position)) {
-                        maxEatCount = Math.max(maxEatCount, 1);
-                    }
-                }
-                
-                return maxEatCount;
-            }
-            
-            hasSquare(player) {
-                // 检查所有可能的正方形
-                const squares = [
-                    [1, 2, 6, 7],
-                    [2, 3, 7, 8],
-                    [3, 4, 8, 9],
-                    [4, 5, 9, 10],
-                    [6, 7, 11, 12],
-                    [7, 8, 12, 13],
-                    [8, 9, 13, 14],
-                    [9, 10, 14, 15],
-                    [11, 12, 16, 17],
-                    [12, 13, 17, 18],
-                    [13, 14, 18, 19],
-                    [14, 15, 19, 20],
-                    [16, 17, 21, 22],
-                    [17, 18, 22, 23],
-                    [18, 19, 23, 24],
-                    [19, 20, 24, 25]
-                ];
-                
-                for (const square of squares) {
-                    let allMatch = true;
-                    for (const pos of square) {
-                        if (this.board[pos] !== player) {
-                            allMatch = false;
-                            break;
-                        }
-                    }
-                    if (allMatch) {
-                        return true;
-                    }
+                // 吃子移动（距离为2，目标位置是羊，中间位置为空）
+                if (distance === 2 && this.board[to] === 'sheep') {
+                    // 计算中间位置
+                    const midRow = (fromRow + toRow) / 2;
+                    const midCol = (fromCol + toCol) / 2;
+                    const midPosition = (midRow - 1) * 5 + midCol;
+                    
+                    // 检查中间位置是否为空
+                    return this.board[midPosition] === null;
                 }
                 
                 return false;
             }
             
-            hasLine(player, positions) {
-                for (const pos of positions) {
-                    if (this.board[pos] !== player) {
-                        return false;
-                    }
+            isValidSheepMove(from, to) {
+                // 计算位置差
+                const fromRow = Math.ceil(from / 5);
+                const fromCol = (from - 1) % 5 + 1;
+                const toRow = Math.ceil(to / 5);
+                const toCol = (to - 1) % 5 + 1;
+                
+                // 检查是否是直线移动
+                if (fromRow !== toRow && fromCol !== toCol) {
+                    return false;
                 }
-                return true;
+                
+                // 计算距离
+                const distance = Math.max(Math.abs(fromRow - toRow), Math.abs(fromCol - toCol));
+                
+                // 羊只能移动一格
+                return distance === 1;
+            }
+            
+            makeMove(from, to) {
+                const piece = this.board[from];
+                this.board[from] = null;
+                
+                // 检查是否是吃羊移动
+                if (piece === 'wolf' && this.board[to] === 'sheep') {
+                    // 吃掉羊
+                    this.sheepCount--;
+                    this.sheepCountElement.textContent = this.sheepCount;
+                }
+                
+                // 移动棋子到目标位置
+                this.board[to] = piece;
+                this.playMoveSound();
+                this.renderBoard();
             }
             
             playMoveSound() {
@@ -1224,70 +981,41 @@
             }
             
             switchPlayer() {
-                this.currentPlayer = this.currentPlayer === 'black' ? 'red' : 'black';
+                this.currentPlayer = this.currentPlayer === 'wolf' ? 'sheep' : 'wolf';
                 this.updateGameInfo();
             }
             
             checkGameEnd() {
-                // 检查是否有一方的棋子被吃完
-                if (this.blackCount === 0) {
+                // 检查狼是否吃光了羊
+                if (this.sheepCount === 0) {
                     this.gameStatus = 'ended';
                     this.updateGameInfo();
-                    this.showMessage('游戏结束', '黑方无棋子，系统判黑方输，红方胜利！');
+                    this.showMessage('游戏结束', '狼吃光了所有羊，狼胜利！');
                     return;
                 }
                 
-                if (this.redCount === 0) {
-                    this.gameStatus = 'ended';
-                    this.updateGameInfo();
-                    this.showMessage('游戏结束', '红方无棋子，系统判红方输，黑方胜利！');
-                    return;
+                // 检查狼是否被围死
+                let wolfCanMove = false;
+                for (let i = 1; i <= 25; i++) {
+                    if (this.board[i] === 'wolf') {
+                        if (this.hasValidMoves(i)) {
+                            wolfCanMove = true;
+                            break;
+                        }
+                    }
                 }
                 
-                // 检查是否有一方的棋子被包围（无法移动）
-                if (this.gamePhase === 'eating' && this.eatPhaseStep >= 2) {
-                    if (this.currentPlayer === 'black' && !this.hasValidMoves('black')) {
-                        this.gameStatus = 'ended';
-                        this.updateGameInfo();
-                        this.showMessage('游戏结束', '黑方棋子被包围，无法移动，系统判黑方输，红方胜利！');
-                        return;
-                    }
-                    
-                    if (this.currentPlayer === 'red' && !this.hasValidMoves('red')) {
-                        this.gameStatus = 'ended';
-                        this.updateGameInfo();
-                        this.showMessage('游戏结束', '红方棋子被包围，无法移动，系统判红方输，黑方胜利！');
-                        return;
-                    }
+                if (!wolfCanMove) {
+                    this.gameStatus = 'ended';
+                    this.updateGameInfo();
+                    this.showMessage('游戏结束', '狼被围死无法移动，羊胜利！');
                 }
             }
             
-            hasValidMoves(player) {
-                // 检查玩家是否有可移动的棋子
+            hasValidMoves(position) {
                 for (let i = 1; i <= 25; i++) {
-                    if (this.board[i] === player) {
-                        // 检查该棋子是否有相邻的空位
-                        const row = Math.ceil(i / 5);
-                        const col = (i - 1) % 5 + 1;
-                        
-                        const directions = [
-                            { row: -1, col: 0 }, // 上
-                            { row: 1, col: 0 },  // 下
-                            { row: 0, col: -1 }, // 左
-                            { row: 0, col: 1 }   // 右
-                        ];
-                        
-                        for (const dir of directions) {
-                            const newRow = row + dir.row;
-                            const newCol = col + dir.col;
-                            
-                            if (newRow >= 1 && newRow <= 5 && newCol >= 1 && newCol <= 5) {
-                                const newPosition = (newRow - 1) * 5 + newCol;
-                                if (this.board[newPosition] === null) {
-                                    return true;
-                                }
-                            }
-                        }
+                    if (this.isValidMove(position, i)) {
+                        return true;
                     }
                 }
                 return false;
@@ -1296,64 +1024,15 @@
             highlightValidMoves(position) {
                 this.renderBoard();
                 
-                if (this.gamePhase === 'placing') {
-                    // 下棋阶段，只高亮显示选中的位置
-                    const pos = this.positionMap[position];
-                    const validMove = document.createElement('div');
-                    validMove.classList.add('valid-move');
-                    validMove.style.left = `${pos.x - 20}px`;
-                    validMove.style.top = `${pos.y - 20}px`;
-                    validMove.addEventListener('click', () => this.handleIntersectionClick(position));
-                    this.boardElement.appendChild(validMove);
-                } else {
-                    // 吃子阶段，高亮显示可移动的相邻空位
-                    const fromRow = Math.ceil(position / 5);
-                    const fromCol = (position - 1) % 5 + 1;
-                    
-                    // 检查上、下、左、右四个方向
-                    const directions = [
-                        { row: -1, col: 0 }, // 上
-                        { row: 1, col: 0 },  // 下
-                        { row: 0, col: -1 }, // 左
-                        { row: 0, col: 1 }   // 右
-                    ];
-                    
-                    for (const dir of directions) {
-                        const newRow = fromRow + dir.row;
-                        const newCol = fromCol + dir.col;
-                        
-                        // 检查是否在棋盘范围内
-                        if (newRow >= 1 && newRow <= 5 && newCol >= 1 && newCol <= 5) {
-                            const newPosition = (newRow - 1) * 5 + newCol;
-                            
-                            // 检查目标位置是否为空
-                            if (this.board[newPosition] === null) {
-                                const pos = this.positionMap[newPosition];
-                                const validMove = document.createElement('div');
-                                validMove.classList.add('valid-move');
-                                validMove.style.left = `${pos.x - 20}px`;
-                                validMove.style.top = `${pos.y - 20}px`;
-                                validMove.addEventListener('click', () => this.handleIntersectionClick(newPosition));
-                                this.boardElement.appendChild(validMove);
-                            }
-                        }
-                    }
-                }
-            }
-            
-            highlightEatablePieces() {
-                this.renderBoard();
-                
-                // 高亮显示所有可吃的对方棋子
                 for (let i = 1; i <= 25; i++) {
-                    if (this.board[i] === this.eatTargetPlayer) {
+                    if (this.isValidMove(position, i)) {
                         const pos = this.positionMap[i];
-                        const eatablePiece = document.createElement('div');
-                        eatablePiece.classList.add('valid-move');
-                        eatablePiece.style.left = `${pos.x - 20}px`;
-                        eatablePiece.style.top = `${pos.y - 20}px`;
-                        eatablePiece.addEventListener('click', () => this.handleIntersectionClick(i));
-                        this.boardElement.appendChild(eatablePiece);
+                        const validMove = document.createElement('div');
+                        validMove.classList.add('valid-move');
+                        validMove.style.left = `${pos.x - 20}px`;
+                        validMove.style.top = `${pos.y - 20}px`;
+                        validMove.addEventListener('click', () => this.handleIntersectionClick(i));
+                        this.boardElement.appendChild(validMove);
                     }
                 }
             }
@@ -1373,7 +1052,7 @@
                         const pos = this.positionMap[i];
                         const pieceElement = document.createElement('div');
                         pieceElement.classList.add('piece', piece);
-                        pieceElement.textContent = piece === 'black' ? '●' : '●';
+                        pieceElement.textContent = piece === 'wolf' ? '狼' : '羊';
                         pieceElement.style.left = `${pos.x - 25}px`;
                         pieceElement.style.top = `${pos.y - 25}px`;
                         pieceElement.addEventListener('click', (e) => {
@@ -1386,19 +1065,27 @@
             }
             
             updateGameInfo() {
-                this.currentPlayerElement.textContent = `当前玩家: ${this.currentPlayer === 'black' ? '黑' : '红'}`;
+                let playerText = `当前玩家: ${this.currentPlayer === 'wolf' ? '狼' : '羊'}`;
+                if (this.isOnline) {
+                    playerText += ` (您是: ${this.playerRole === 'wolf' ? '狼' : '羊'})`;
+                }
+                this.currentPlayerElement.textContent = playerText;
                 
                 let statusText = '';
                 switch (this.gameStatus) {
                     case 'ready': statusText = '准备开始'; break;
-                    case 'playing': statusText = this.gamePhase === 'placing' ? '下棋阶段' : '吃子阶段'; break;
+                    case 'waiting': statusText = '等待玩家'; break;
+                    case 'playing': statusText = '游戏进行中'; break;
                     case 'paused': statusText = '游戏暂停'; break;
                     case 'ended': statusText = '游戏结束'; break;
                 }
+                if (this.isOnline && this.roomId) {
+                    statusText += ` (房间: ${this.roomId})`;
+                }
                 this.gameStatusElement.textContent = `游戏状态: ${statusText}`;
                 
-                this.blackCountElement.textContent = this.blackCount;
-                this.redCountElement.textContent = this.redCount;
+                this.wolfCountElement.textContent = this.wolfCount;
+                this.sheepCountElement.textContent = this.sheepCount;
             }
             
             showMessage(title, text) {
@@ -1414,7 +1101,7 @@
 
         // 初始化游戏
         window.addEventListener('DOMContentLoaded', () => {
-            new FiveRoadSquareGame();
+            new WolfEatSheepGame();
         });
     </script>
 </body>
